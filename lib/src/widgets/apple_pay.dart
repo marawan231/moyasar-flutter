@@ -107,6 +107,9 @@ class _ApplePayState extends State<ApplePay> {
     // TODO: Should only use the native widget later on when it's more stable.
     return isApplePayAvailable
         ? ApplePayButton(
+            cornerRadius: 8,
+
+            // buttonProvider: PayProvider.apple_pay,
             paymentConfiguration:
                 PaymentConfiguration.fromJsonString(createConfigString()),
             paymentItems: [
@@ -119,7 +122,7 @@ class _ApplePayState extends State<ApplePay> {
             style: widget.buttonStyle,
             onPaymentResult: onApplePayResult,
             width: MediaQuery.of(context).size.width,
-            height: 40,
+            height: 56,
             onError: (_) {
               onApplePayError();
             },

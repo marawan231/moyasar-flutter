@@ -22,3 +22,27 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+  fonts:
+    - family: SomarSans
+      fonts:
+        #regular
+        - asset: assets/fonts/somar/Somar-Regular.otf
+          weight: 400
+          #bold
+        - asset: assets/fonts/somar/Somar-Bold.otf
+          weight: 700
+        #light
+        - asset: assets/fonts/somar/Somar-Light.otf
+          weight: 300
+        #medium
+        - asset: assets/fonts/somar/Somar-Medium.otf
+          weight: 500
+        #extra light
+        - asset: assets/fonts/somar/Somar-ExtraLight.otf
+          weight: 200
+        #extra bold
+        - asset: assets/fonts/somar/Somar-ExtraBold.otf
+          weight: 800
+        #semi bold
+        - asset: assets/fonts/somar/Somar-SemiBold.otf
+          weight: 600  

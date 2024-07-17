@@ -12,20 +12,43 @@ class PaymentMethods extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (Platform.isIOS) Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: ApplePay(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          _buildHeadline(),
+          CreditCard(
+            locale: const Localization.ar(),
             config: paymentConfig,
             onPaymentResult: onPaymentResult,
           ),
-        ) else const SizedBox.shrink(),
-        CreditCard(
-          config: paymentConfig,
-          onPaymentResult: onPaymentResult,
-        )
-      ],
+          if (Platform.isIOS)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: ApplePay(
+                // buttonStyle:  ApplePayButtonStyle.black,
+                config: paymentConfig,
+                onPaymentResult: onPaymentResult,
+              ),
+            )
+          else
+            const SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+
+  _buildHeadline() {
+    return Text(
+      'معلومات الدفع',
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'SomarSans',
+      ),
     );
   }
 }

@@ -12,7 +12,8 @@ class CreditCard extends StatefulWidget {
       {super.key,
       required this.config,
       required this.onPaymentResult,
-      this.locale = const Localization.en()})
+      this.locale = const Localization.en(),
+      this.conditionsWidget})
       : textDirection =
             locale.languageCode == 'ar' ? TextDirection.rtl : TextDirection.ltr;
 
@@ -20,6 +21,7 @@ class CreditCard extends StatefulWidget {
   final PaymentConfig config;
   final Localization locale;
   final TextDirection textDirection;
+  final Widget? conditionsWidget;
 
   @override
   State<CreditCard> createState() => _CreditCardState();
@@ -116,9 +118,12 @@ class _CreditCardState extends State<CreditCard> {
       child: Column(
         children: [
           CardFormField(
+              headlineText: 'الاسم على البطاقة',
               inputDecoration: buildInputDecoration(
-                  hintText: widget.locale.nameOnCard,
-                  hintTextDirection: widget.textDirection),
+                hintText: widget.locale.nameOnCard,
+                hintTextDirection: widget.textDirection,
+                addNetworkIcons: false,
+              ),
               keyboardType: TextInputType.text,
               validator: (String? input) =>
                   CardUtils.validateName(input, widget.locale),
@@ -126,11 +131,13 @@ class _CreditCardState extends State<CreditCard> {
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp('[a-zA-Z. ]')),
               ]),
+          const SizedBox(height: 8),
           CardFormField(
+            headlineText: 'رجاء إدخال رقم البطاقة',
             inputDecoration: buildInputDecoration(
                 hintText: widget.locale.cardNumber,
                 hintTextDirection: widget.textDirection,
-                addNetworkIcons: true),
+                addNetworkIcons: false),
             validator: (String? input) =>
                 CardUtils.validateCardNum(input, widget.locale),
             inputFormatters: [
@@ -141,45 +148,63 @@ class _CreditCardState extends State<CreditCard> {
             onSaved: (value) =>
                 _cardData.number = CardUtils.getCleanedNumber(value!),
           ),
-          CardFormField(
-            inputDecoration: buildInputDecoration(
-              hintText: '${widget.locale.expiry} (MM / YY)',
-              hintTextDirection: widget.textDirection,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(4),
-              CardMonthInputFormatter(),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: CardFormField(
+                  headlineText: 'تاريخ الصلاحية',
+                  inputDecoration: buildInputDecoration(
+                    hintText: widget.locale.expiry,
+                    hintTextDirection: widget.textDirection,
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(4),
+                    CardMonthInputFormatter(),
+                  ],
+                  validator: (String? input) =>
+                      CardUtils.validateDate(input, widget.locale),
+                  onSaved: (value) {
+                    List<String> expireDate = CardUtils.getExpiryDate(value!);
+                    _cardData.month = expireDate.first;
+                    _cardData.year = expireDate[1];
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: CardFormField(
+                  headlineText: 'CVV',
+                  inputDecoration: buildInputDecoration(
+                    hintText: widget.locale.cvc,
+                    hintTextDirection: widget.textDirection,
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(4),
+                  ],
+                  validator: (String? input) =>
+                      CardUtils.validateCVC(input, widget.locale),
+                  onSaved: (value) => _cardData.cvc = value ?? '',
+                ),
+              ),
             ],
-            validator: (String? input) =>
-                CardUtils.validateDate(input, widget.locale),
-            onSaved: (value) {
-              List<String> expireDate = CardUtils.getExpiryDate(value!);
-              _cardData.month = expireDate.first;
-              _cardData.year = expireDate[1];
-            },
           ),
-          CardFormField(
-            inputDecoration: buildInputDecoration(
-              hintText: widget.locale.cvc,
-              hintTextDirection: widget.textDirection,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(4),
-            ],
-            validator: (String? input) =>
-                CardUtils.validateCVC(input, widget.locale),
-            onSaved: (value) => _cardData.cvc = value ?? '',
-          ),
+          const SizedBox(height: 8),
+          widget.conditionsWidget ?? const SizedBox.shrink(),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: SizedBox(
+              height: 56,
+              width: double.infinity,
               child: ElevatedButton(
-                style: ButtonStyle(
-                  minimumSize:
-                      const WidgetStatePropertyAll<Size>(Size.fromHeight(55)),
-                  backgroundColor: WidgetStatePropertyAll<Color>(blueColor),
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: const Color(0xFF335FFF),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
                 onPressed: _isSubmitting ? () {} : _saveForm,
                 child: _isSubmitting
@@ -188,15 +213,20 @@ class _CreditCardState extends State<CreditCard> {
                         strokeWidth: 2,
                       )
                     : Text(
-                        showAmount(widget.config.amount, widget.config.currency,
-                            widget.locale),
-                        style: const TextStyle(color: Colors.white),
+                        "دفع رسوم الخدمة  ( ${showAmount(widget.config.amount, widget.config.currency, widget.locale)} )",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'SomarSans',
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        ),
                         textDirection: widget.textDirection,
                       ),
               ),
             ),
           ),
-          SaveCardNotice(tokenizeCard: _tokenizeCard, locale: widget.locale)
+          //TODO to be implemented later on the next version of the package with the save card feature
+          // SaveCardNotice(tokenizeCard: _tokenizeCard, locale: widget.locale)
         ],
       ),
     );
@@ -243,6 +273,7 @@ class CardFormField extends StatelessWidget {
   final TextInputAction textInputAction;
   final List<TextInputFormatter>? inputFormatters;
   final InputDecoration? inputDecoration;
+  final String? headlineText;
 
   const CardFormField({
     super.key,
@@ -252,19 +283,35 @@ class CardFormField extends StatelessWidget {
     this.keyboardType = TextInputType.number,
     this.textInputAction = TextInputAction.next,
     this.inputFormatters,
+    this.headlineText,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-          keyboardType: keyboardType,
-          textInputAction: textInputAction,
-          decoration: inputDecoration,
-          validator: validator,
-          onSaved: onSaved,
-          inputFormatters: inputFormatters),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          headlineText ?? '',
+          style: const TextStyle(
+            color: Color.fromARGB(255, 13, 13, 13),
+            fontSize: 22,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'SomarSans',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsetsDirectional.only(
+              top: 6, bottom: 0, start: 0, end: 0),
+          child: TextFormField(
+              keyboardType: keyboardType,
+              textInputAction: textInputAction,
+              decoration: inputDecoration,
+              validator: validator,
+              onSaved: onSaved,
+              inputFormatters: inputFormatters),
+        ),
+      ],
     );
   }
 }
@@ -278,15 +325,51 @@ InputDecoration buildInputDecoration(
     {required String hintText,
     required TextDirection hintTextDirection,
     bool addNetworkIcons = false}) {
+  /*
+        isDense: true,
+        filled: true,
+        fillColor: ColorManager.white,
+        hintStyle: getMediumStyle(
+          color: ColorManager.darkGrey,
+          fontSize: 18.sp,
+        ),
+
+        // contentPadding: EdgeInsets.symmetric(
+        //     vertical: AppPadding.pH16, horizontal: AppPadding.pH16),
+        enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: ColorManager.grey, width: 1),
+            borderRadius: BorderRadius.circular(AppBorderRadius.r8)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: ColorManager.primary, width: 1),
+            borderRadius: BorderRadius.circular(AppBorderRadius.r8)),
+        disabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: ColorManager.grey, width: 1),
+            borderRadius: BorderRadius.circular(AppBorderRadius.r8)),
+        errorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: ColorManager.error, width: 1),
+            borderRadius: BorderRadius.circular(AppBorderRadius.r8)),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: ColorManager.error, width: 1),
+          borderRadius: BorderRadius.circular(AppBorderRadius.r8),
+        ),
+       */
   return InputDecoration(
-      suffixIcon: addNetworkIcons ? const NetworkIcons() : null,
-      hintText: hintText,
-      hintTextDirection: hintTextDirection,
-      focusedErrorBorder: defaultErrorBorder,
-      enabledBorder: defaultEnabledBorder,
-      focusedBorder: defaultFocusedBorder,
-      errorBorder: defaultErrorBorder,
-      contentPadding: const EdgeInsets.all(8.0));
+    suffixIcon: addNetworkIcons ? const NetworkIcons() : null,
+    hintText: hintText,
+    hintStyle: const TextStyle(
+        color: Color(0xFF7E878E),
+        fontSize: 22,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'SomarSans'),
+    hintTextDirection: hintTextDirection,
+    focusedErrorBorder: defaultErrorBorder,
+    enabledBorder: defaultEnabledBorder,
+    focusedBorder: defaultFocusedBorder,
+    disabledBorder: defaultEnabledBorder,
+    errorBorder: defaultErrorBorder,
+    contentPadding: const EdgeInsetsDirectional.only(
+        start: 16, end: 16, top: 10, bottom: 10),
+  );
 }
 
 void closeKeyboard() => FocusManager.instance.primaryFocus?.unfocus();
@@ -294,15 +377,15 @@ void closeKeyboard() => FocusManager.instance.primaryFocus?.unfocus();
 BorderRadius defaultBorderRadius = const BorderRadius.all(Radius.circular(8));
 
 OutlineInputBorder defaultEnabledBorder = OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.grey[400]!),
+    borderSide: const BorderSide(color: Color(0xFFE2E2E2)),
     borderRadius: defaultBorderRadius);
 
 OutlineInputBorder defaultFocusedBorder = OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.grey[600]!),
+    borderSide: const BorderSide(color: Color(0xFF335FFF)),
     borderRadius: defaultBorderRadius);
 
 OutlineInputBorder defaultErrorBorder = OutlineInputBorder(
-    borderSide: const BorderSide(color: Colors.red),
+    borderSide: const BorderSide(color: Color(0xFFF33838)),
     borderRadius: defaultBorderRadius);
 
 Color blueColor = Colors.blue[700]!;
