@@ -304,9 +304,16 @@ class CardFormField extends StatelessWidget {
           padding: const EdgeInsetsDirectional.only(
               top: 6, bottom: 0, start: 0, end: 0),
           child: TextFormField(
+              // st
               keyboardType: keyboardType,
               textInputAction: textInputAction,
               decoration: inputDecoration,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'SomarSans',
+              ),
               validator: validator,
               onSaved: onSaved,
               inputFormatters: inputFormatters),
