@@ -213,7 +213,7 @@ class _CreditCardState extends State<CreditCard> {
                         strokeWidth: 2,
                       )
                     : Text(
-                        "دفع رسوم الخدمة  ( ${showAmount(widget.config.amount, widget.config.currency, widget.locale)} )",
+                        "دفع رسوم الخدمة  ",
                         style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'SomarSans',
