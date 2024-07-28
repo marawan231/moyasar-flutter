@@ -216,8 +216,8 @@ class _CreditCardState extends State<CreditCard> {
                         "دفع رسوم الخدمة  ",
                         style: const TextStyle(
                           color: Colors.white,
-                          fontFamily: 'SomarSans',
-                          fontSize: 24,
+                          fontFamily: 'IBMPlexSansArabic',
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
                         textDirection: widget.textDirection,
@@ -295,9 +295,9 @@ class CardFormField extends StatelessWidget {
           headlineText ?? '',
           style: const TextStyle(
             color: Color.fromARGB(255, 13, 13, 13),
-            fontSize: 22,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
-            fontFamily: 'SomarSans',
+            fontFamily: 'IBMPlexSansArabic',
           ),
         ),
         Padding(
@@ -308,11 +308,11 @@ class CardFormField extends StatelessWidget {
               keyboardType: keyboardType,
               textInputAction: textInputAction,
               decoration: inputDecoration,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
-                fontSize: 22,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
-                fontFamily: 'SomarSans',
+                fontFamily: 'IBMPlexSansArabic',
               ),
               validator: validator,
               onSaved: onSaved,
@@ -365,9 +365,9 @@ InputDecoration buildInputDecoration(
     hintText: hintText,
     hintStyle: const TextStyle(
         color: Color(0xFF7E878E),
-        fontSize: 22,
+        fontSize: 14,
         fontWeight: FontWeight.w500,
-        fontFamily: 'SomarSans'),
+        fontFamily: 'IBMPlexSansArabic'),
     hintTextDirection: hintTextDirection,
     focusedErrorBorder: defaultErrorBorder,
     enabledBorder: defaultEnabledBorder,

@@ -28,6 +28,7 @@ class PaymentMethods extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: ApplePay(
+                
                 // buttonStyle:  ApplePayButtonStyle.black,
                 config: paymentConfig,
                 onPaymentResult: onPaymentResult,
@@ -45,9 +46,9 @@ class PaymentMethods extends StatelessWidget {
       'معلومات الدفع',
       style: TextStyle(
         color: Colors.black,
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: FontWeight.bold,
-        fontFamily: 'SomarSans',
+        fontFamily: 'IBMPlexSansArabic',
       ),
     );
   }
