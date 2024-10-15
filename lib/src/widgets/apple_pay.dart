@@ -11,7 +11,8 @@ class ApplePay extends StatefulWidget {
       required this.config,
       required this.onPaymentResult,
       this.buttonType = ApplePayButtonType.inStore,
-      this.buttonStyle = ApplePayButtonStyle.black})
+      this.buttonStyle = ApplePayButtonStyle.black,
+      this.onTap})
       : assert(config.applePay != null,
             "Please add applePayConfig when instantiating the paymentConfig.");
 
@@ -19,6 +20,7 @@ class ApplePay extends StatefulWidget {
   final Function onPaymentResult;
   final ApplePayButtonType buttonType;
   final ApplePayButtonStyle buttonStyle;
+  final void Function()? onTap;
   final MethodChannel channel =
       const MethodChannel('flutter.moyasar.com/apple_pay');
 
@@ -107,6 +109,8 @@ class _ApplePayState extends State<ApplePay> {
     // TODO: Should only use the native widget later on when it's more stable.
     return isApplePayAvailable
         ? ApplePayButton(
+            onPressed: widget.onTap,
+
             cornerRadius: 8,
 
             // buttonProvider: PayProvider.apple_pay,

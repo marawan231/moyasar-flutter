@@ -28,6 +28,7 @@ class PaymentMethods extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: ApplePay(
+                // onTap: ,
                 
                 // buttonStyle:  ApplePayButtonStyle.black,
                 config: paymentConfig,
