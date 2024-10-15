@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,9 @@ class PaymentMethods extends StatelessWidget {
 
   const PaymentMethods(
       {super.key, required this.paymentConfig, required this.onPaymentResult});
+  _onCreditTap() {
+    log('Credit Card Tapped');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +24,7 @@ class PaymentMethods extends StatelessWidget {
         children: [
           _buildHeadline(),
           CreditCard(
+            onCreditTap: _onCreditTap,
             locale: const Localization.ar(),
             config: paymentConfig,
             onPaymentResult: onPaymentResult,
@@ -29,7 +34,7 @@ class PaymentMethods extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: ApplePay(
                 // onTap: ,
-                
+
                 // buttonStyle:  ApplePayButtonStyle.black,
                 config: paymentConfig,
                 onPaymentResult: onPaymentResult,

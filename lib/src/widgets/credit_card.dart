@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moyasar/moyasar.dart';
@@ -13,7 +16,8 @@ class CreditCard extends StatefulWidget {
       required this.config,
       required this.onPaymentResult,
       this.locale = const Localization.en(),
-      this.conditionsWidget})
+      this.conditionsWidget,
+      this.onCreditTap})
       : textDirection =
             locale.languageCode == 'ar' ? TextDirection.rtl : TextDirection.ltr;
 
@@ -22,6 +26,7 @@ class CreditCard extends StatefulWidget {
   final Localization locale;
   final TextDirection textDirection;
   final Widget? conditionsWidget;
+  final void Function()? onCreditTap;
 
   @override
   State<CreditCard> createState() => _CreditCardState();
@@ -50,6 +55,7 @@ class _CreditCardState extends State<CreditCard> {
   }
 
   void _saveForm() async {
+    // widget.onCreditTap!();
     closeKeyboard();
 
     bool isValidForm =
@@ -206,11 +212,18 @@ class _CreditCardState extends State<CreditCard> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: _isSubmitting ? () {} : _saveForm,
+                onPressed: _isSubmitting
+                    ? () {}
+                    : () {
+                        if (widget.onCreditTap != null) {
+                          widget.onCreditTap!();
+                        }
+                        _saveForm();
+                      },
                 child: _isSubmitting
-                    ? const CircularProgressIndicator(
+                    ? const CupertinoActivityIndicator(
                         color: Colors.white,
-                        strokeWidth: 2,
+                        // strokeWidth: 2,
                       )
                     : Text(
                         "دفع رسوم الخدمة  ",
