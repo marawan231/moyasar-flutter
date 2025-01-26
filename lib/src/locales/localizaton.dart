@@ -21,6 +21,8 @@ class Localization {
   final String invalidCvc;
 
   final String pay;
+  final String serviceFeePayment;
+  final String serviceFee;
 
   final String saveCardNotice;
 
@@ -41,6 +43,8 @@ class Localization {
       this.cvcRequired = 'Security code is required',
       this.invalidCvc = 'Invalid security code',
       this.pay = 'Pay',
+      this.serviceFeePayment = 'Service Fee Payment',
+      this.serviceFee = 'Service Fee',
       this.saveCardNotice = 'Your card data will be saved upon submit.'});
 
   const Localization.ar(
@@ -60,5 +64,7 @@ class Localization {
       this.cvcRequired = 'رمز التحقق مطلوب',
       this.invalidCvc = 'رمز التحقق غير صحيح',
       this.pay = 'ادفع',
+      this.serviceFeePayment = 'دفع رسوم الخدمة',
+      this.serviceFee = 'دفع رسوم الخدمة',
       this.saveCardNotice = 'سيتم حفظ بيانات البطاقة عند إتمام العملية.'});
 }

@@ -124,7 +124,7 @@ class _CreditCardState extends State<CreditCard> {
       child: Column(
         children: [
           CardFormField(
-              headlineText: 'الاسم على البطاقة',
+              headlineText: widget.locale.nameOnCard,
               inputDecoration: buildInputDecoration(
                 hintText: widget.locale.nameOnCard,
                 hintTextDirection: widget.textDirection,
@@ -139,7 +139,7 @@ class _CreditCardState extends State<CreditCard> {
               ]),
           const SizedBox(height: 8),
           CardFormField(
-            headlineText: 'رجاء إدخال رقم البطاقة',
+            headlineText: widget.locale.cardNumber,
             inputDecoration: buildInputDecoration(
                 hintText: widget.locale.cardNumber,
                 hintTextDirection: widget.textDirection,
@@ -159,7 +159,7 @@ class _CreditCardState extends State<CreditCard> {
             children: [
               Expanded(
                 child: CardFormField(
-                  headlineText: 'تاريخ الصلاحية',
+                  headlineText: widget.locale.expiry,
                   inputDecoration: buildInputDecoration(
                     hintText: widget.locale.expiry,
                     hintTextDirection: widget.textDirection,
@@ -226,7 +226,7 @@ class _CreditCardState extends State<CreditCard> {
                         // strokeWidth: 2,
                       )
                     : Text(
-                        "دفع رسوم الخدمة  ",
+                        widget.locale.serviceFeePayment,
                         style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'IBMPlexSansArabic',
